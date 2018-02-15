@@ -6,13 +6,18 @@ function IncidentController() {
   return {
     async list(req, res, next) {
       try {
+        const { skip, limit, sort } = req.query;
         const toDate = moment()
           .subtract(30, 'days')
           .toDate();
         const incidents = await Incident.find({
           isArchive: false,
           happendAt: { $gte: toDate },
-        }).exec();
+        })
+          .skip(skip)
+          .limit(limit)
+          .sort(sort)
+          .exec();
         res.json(incidents);
       } catch (error) {
         next(error);
