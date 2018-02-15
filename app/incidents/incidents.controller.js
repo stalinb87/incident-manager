@@ -1,3 +1,4 @@
+const moment = require('moment');
 const Incident = require('./incidents.model');
 const errorTypes = require('../../libs/error.handler/error.types');
 
@@ -5,7 +6,13 @@ function IncidentController() {
   return {
     async list(req, res, next) {
       try {
-        const incidents = await Incident.find({ isArchive: false }).exec();
+        const toDate = moment()
+          .subtract(30, 'days')
+          .toDate();
+        const incidents = await Incident.find({
+          isArchive: false,
+          happendAt: { $gte: toDate },
+        }).exec();
         res.json(incidents);
       } catch (error) {
         next(error);

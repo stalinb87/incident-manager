@@ -8,6 +8,7 @@ const errorTypes = require('../libs/error.handler/error.types');
 const errors = require('../libs/error.handler/errors');
 const seed = require('./seed');
 const paginate = require('../libs/pagination');
+const moment = require('moment');
 
 describe('Tickets', () => {
   before(() => seed());
@@ -56,6 +57,7 @@ describe('Tickets', () => {
           const hasArchive = incidents.some(incident => incident.isArchive);
           hasArchive.should.be.equal(false);
         }));
+
     it('Should allow to archive incidents', async () => {
       const incident = await Incident.findOne().exec();
       incident.isArchive.should.be.equal(false);
@@ -67,6 +69,21 @@ describe('Tickets', () => {
           should.exist(archiveIncident);
           archiveIncident.isArchive.should.be.equal(true);
         });
+    });
+    it('Should get only incidents ocurred in the last 30 days', async () => {
+      const location = await Locality.findOne().exec();
+      const oldIncident = await Incident.create({
+        kind: IncidentType.TRAFFIC_ACCIDENT,
+        location,
+        happendAt: moment()
+          .subtract(31, 'days')
+          .toDate(),
+      });
+      return request.get('/incidents').then((response) => {
+        const incidents = response.body;
+        const foundOldIncident = incidents.some(incident => incident._id.toString() === oldIncident._id.toString());
+        foundOldIncident.should.be.equal(false);
+      });
     });
     it('Should throw an error when archive an unexisting archive', async () => {
       const incident = await Incident.findOne({ isArchive: true }).exec();
