@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/stalinb87/incident-manager.svg?branch=master)](https://travis-ci.org/stalinb87/incident-manager)
+
 # Incidents Web Service
 
 Allow to track incidents that occurred in city’s localities in the last 30 days.
