@@ -2,14 +2,14 @@
   "name": "ticket",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "URI=mongodb://localhost/incidents-test ./node_modules/mocha/bin/mocha test/index.js",
     "start": "node server.js",
     "dev": "./node_modules/nodemon/bin/nodemon.js server.js",
     "seed": "node ./libs/seed"
   },
-  "author": "",
+  "author": "Stalin Bonilla",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.2",
